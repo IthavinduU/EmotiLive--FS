@@ -18,6 +18,8 @@ interface BehaviorLog {
 export default function ArchivePage() {
   const [emotionLogs, setEmotionLogs] = useState<EmotionLog[]>([]);
   const [behaviorLogs, setBehaviorLogs] = useState<BehaviorLog[]>([]);
+  const [loadingEmotion, setLoadingEmotion] = useState(false);
+  const [loadingBehavior, setLoadingBehavior] = useState(false);
 
   useEffect(() => {
     // Fetch Emotion Logs
@@ -33,9 +35,55 @@ export default function ArchivePage() {
       .catch((err) => console.error("Error fetching behavior logs:", err));
   }, []);
 
+  const triggerEmotionModel = async () => {
+    setLoadingEmotion(true);
+    try {
+      const response = await fetch("/api/runEmotionModel", { method: "GET" });
+      const data = await response.json();
+      alert(data.message || "Emotion model triggered");
+    } catch (error) {
+      alert("Error triggering emotion model");
+      console.error(error);
+    } finally {
+      setLoadingEmotion(false);
+    }
+  };
+
+  const triggerBehaviorModel = async () => {
+    setLoadingBehavior(true);
+    try {
+      const response = await fetch("/api/runBehaviorModel", { method: "GET" });
+      const data = await response.json();
+      alert(data.message || "Behavior model triggered");
+    } catch (error) {
+      alert("Error triggering behavior model");
+      console.error(error);
+    } finally {
+      setLoadingBehavior(false);
+    }
+  };
+
   return (
     <main className="max-w-4xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Student Logs</h1>
+
+      {/* Emotion Model Trigger Button */}
+      <button
+        onClick={triggerEmotionModel}
+        disabled={loadingEmotion}
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+      >
+        {loadingEmotion ? "Running Emotion Model..." : "Trigger Emotion Model"}
+      </button>
+
+      {/* Behavior Model Trigger Button */}
+      <button
+        onClick={triggerBehaviorModel}
+        disabled={loadingBehavior}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 ml-4"
+      >
+        {loadingBehavior ? "Running Behavior Model..." : "Trigger Behavior Model"}
+      </button>
 
       {/* Emotion Logs Section */}
       <section className="mb-6">

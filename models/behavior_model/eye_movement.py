@@ -1,11 +1,15 @@
-#eyemovement.py
+import os
 import cv2
 import dlib
 import numpy as np
 
-# Load dlib’s face detector and 68 landmarks model
+# Get the absolute path to the shape predictor file
+base_path = os.path.dirname(os.path.abspath(__file__))  # This gets the directory of `eye_movement.py`
+model_path = os.path.join(base_path, "models", "shape_predictor_68_face_landmarks.dat")
+
+# Load dlib’s face detector and shape predictor with the correct path
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor(model_path)
 
 def detect_pupil(eye_region):
     gray_eye = cv2.cvtColor(eye_region, cv2.COLOR_BGR2GRAY)
