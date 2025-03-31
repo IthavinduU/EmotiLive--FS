@@ -1,0 +1,30 @@
+# Ignore ESRGAN model weights
+models/ESRGAN Model/weights/*.pth
+
+# Ignore ESRGAN model weights
+models/ESRGAN Model/weights/*.pth
+
+# Ignore Python environment
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Ignore Node.js dependencies
+node_modules/
+.next/
+
+# Ignore IDE and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables
+.env
+.env.local
+
+# Ignore logs and temporary files
+logs/
+*.log
+*.tmp
+*.bak 

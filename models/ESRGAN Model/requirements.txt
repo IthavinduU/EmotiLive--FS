@@ -1,0 +1,15 @@
+basicsr
+facexlib
+gfpgan
+numpy
+opencv-python
+lmdb
+pyyaml
+torch
+torchvision
+tqdm
+requests
+scikit-image
+scipy
+yacs
+imageio
