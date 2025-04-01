@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { calculateEmotionStats, calculateBehaviorStats } from "@/utils/calculateStats";
 
 interface EmotionLog {
   timestamp: string;
@@ -21,17 +22,26 @@ export default function ArchivePage() {
   const [loadingEmotion, setLoadingEmotion] = useState(false);
   const [loadingBehavior, setLoadingBehavior] = useState(false);
 
+  const [emotionStats, setEmotionStats] = useState<Record<string, number>>({});
+  const [behaviorStats, setBehaviorStats] = useState<{ gazeCounts: Record<string, number>; headPoseCounts: Record<string, number> }>({ gazeCounts: {}, headPoseCounts: {} });
+
   useEffect(() => {
     // Fetch Emotion Logs
     fetch("/api/emotion-data")
       .then((res) => res.json())
-      .then((data) => setEmotionLogs(data.logs))
+      .then((data) => {
+        setEmotionLogs(data.logs);
+        setEmotionStats(calculateEmotionStats(data.logs)); // Calculate stats
+      })
       .catch((err) => console.error("Error fetching emotion logs:", err));
 
     // Fetch Behavior Logs
     fetch("/api/behaviour-data")
       .then((res) => res.json())
-      .then((data) => setBehaviorLogs(data.logs))
+      .then((data) => {
+        setBehaviorLogs(data.logs);
+        setBehaviorStats(calculateBehaviorStats(data.logs)); // Calculate stats
+      })
       .catch((err) => console.error("Error fetching behavior logs:", err));
   }, []);
 
@@ -84,6 +94,54 @@ export default function ArchivePage() {
       >
         {loadingBehavior ? "Running Behavior Model..." : "Trigger Behavior Model"}
       </button>
+
+      {/* Emotion Stats Section */}
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">Emotion Statistics</h2>
+        <div className="border rounded p-4 bg-white shadow">
+          {Object.keys(emotionStats).length === 0 ? (
+            <p className="text-gray-500">No emotion stats available</p>
+          ) : (
+            <ul className="space-y-2">
+              {Object.entries(emotionStats).map(([emotion, count]) => (
+                <li key={emotion} className="p-2 border rounded">
+                  {emotion}: {count} occurrences
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* Behavior Stats Section */}
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">Behavior Statistics</h2>
+        <div className="border rounded p-4 bg-white shadow">
+          {Object.keys(behaviorStats.gazeCounts).length === 0 &&
+          Object.keys(behaviorStats.headPoseCounts).length === 0 ? (
+            <p className="text-gray-500">No behavior stats available</p>
+          ) : (
+            <>
+              <h3 className="text-lg font-medium">Gaze Statistics</h3>
+              <ul className="space-y-2 mb-4">
+                {Object.entries(behaviorStats.gazeCounts).map(([gaze, count]) => (
+                  <li key={gaze} className="p-2 border rounded">
+                    {gaze}: {count} occurrences
+                  </li>
+                ))}
+              </ul>
+              <h3 className="text-lg font-medium">Head Pose Statistics</h3>
+              <ul className="space-y-2">
+                {Object.entries(behaviorStats.headPoseCounts).map(([headPose, count]) => (
+                  <li key={headPose} className="p-2 border rounded">
+                    {headPose}: {count} occurrences
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      </section>
 
       {/* Emotion Logs Section */}
       <section className="mb-6">
