@@ -43,6 +43,7 @@ export default function ArchivePage() {
         setBehaviorStats(calculateBehaviorStats(data.logs)); // Calculate stats
       })
       .catch((err) => console.error("Error fetching behavior logs:", err));
+      
   }, []);
 
   const triggerEmotionModel = async () => {

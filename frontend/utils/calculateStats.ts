@@ -20,3 +20,4 @@ export function calculateEmotionStats(logs: { emotion: string }[]) {
     return { gazeCounts, headPoseCounts };
   }
   
+  
