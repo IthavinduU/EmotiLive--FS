@@ -47,9 +47,9 @@ def send_behavior_data(student_behavior_data):
         response = requests.post(NEXTJS_API_URL, json=student_data)
 
         if response.status_code == 201:
-            print(f"✅ Sent to Next.js: {student_data}")
+            print(f"Sent to Next.js: {student_data}")
         else:
-            print(f"⚠️ Failed to send: {response.status_code}, {response.text}")
+            print(f"Failed to send: {response.status_code}, {response.text}")
 
 
 # ✅ Function to log behavior data in MongoDB
@@ -65,7 +65,7 @@ def log_behavior():
                 "head_pose": head_pose,
             }
             collection.insert_one(data_entry)
-            print(f"🟢 Logged in MongoDB: {data_entry}")
+            print(f"Logged in MongoDB: {data_entry}")
 
     # Send data to Next.js API
     send_behavior_data(student_behavior_data)

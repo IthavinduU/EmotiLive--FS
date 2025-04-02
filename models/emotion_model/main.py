@@ -14,7 +14,7 @@ db = client["emotilive"]  # Database name
 collection = db["emotionlogs"]  # Collection name
 
 # Load the trained emotion recognition model
-model_best = load_model("face_model.h5")
+model_best = load_model("D:\\University\\IIT\\Level 7\\Final Year Project\\MVP\\EmotiLive\\Fullstack\\models\\emotion_model\\face_model.h5")
 class_names = ["Angry", "Disgusted", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
 
 # Video source
@@ -46,9 +46,9 @@ def send_emotion_data(face_emotion_data):
         response = requests.post(NEXTJS_API_URL, json=student_data)
 
         if response.status_code == 201:
-            print(f"✅ Data sent: {student_data}")
+            print(f"Data sent: {student_data}")
         else:
-            print(f"⚠️ Failed to send: {response.status_code}, {response.text}")
+            print(f"Failed to send: {response.status_code}, {response.text}")
 
 
 # Function to log emotions in MongoDB
@@ -64,7 +64,7 @@ def log_emotions():
                 "emotion": emotion,
             }
             collection.insert_one(data_entry)  # Insert into MongoDB
-            print(f"🟢 Logged in MongoDB: {data_entry}")
+            print(f"Logged in MongoDB: {data_entry}")
 
     # Send data to Next.js API
     send_emotion_data(face_emotion_data)

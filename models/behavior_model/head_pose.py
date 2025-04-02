@@ -5,10 +5,13 @@ import numpy as np
 import math
 from collections import deque
 import time
+import os
+
 
 # Load face detector & landmarks predictor
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
+predictor_path = os.path.join(os.path.dirname(__file__), "models", "shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor(predictor_path)
 
 # 3D Model Points (Mapped to Facial Landmarks)
 model_points = np.array([
