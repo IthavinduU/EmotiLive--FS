@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 // 🔹 MongoDB Connection URI
-const MONGO_URI = "mongodb://localhost:27017";
+const MONGO_URI = "mongodb+srv://thavindul:COoDqXkgACy5PLOr@emotilivecluster.zxugaax.mongodb.net/?retryWrites=true&w=majority&appName=Emotilivecluster";
 const DB_NAME = "emotilive"; // Database name
 const COLLECTION_NAME = "behaviourlogs"; // Collection name
 
