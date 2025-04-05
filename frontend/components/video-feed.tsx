@@ -18,20 +18,46 @@ export default function VideoFeed() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center gap-4">
-      <video 
-        ref={videoRef}
-        className="w-full h-full max-h-[80vh] object-contain bg-gray-100"
-        src="/videos/sample.mp4"  
-      >
-        Your browser does not support the video tag.
-      </video>
-      <button 
-        onClick={handlePlayPause}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
+    <div className="relative w-full h-full flex flex-col">
+      <div className="relative flex-1 overflow-hidden rounded-lg">
+        <video 
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          src="/videos/sample.mp4"
+          poster="/videos/thumbnail.jpg"
+        >
+          Your browser does not support the video tag.
+        </video>
+        
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+          <div className="flex items-center justify-between">
+            <button 
+              onClick={handlePlayPause}
+              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md"
+            >
+              {isPlaying ? (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 002 0V8a1 1 0 00-1-1zm4 0a1 1 0 00-1 1v4a1 1 0 002 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  Stop
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                  </svg>
+                  Start
+                </>
+              )}
+            </button>
+            
+            <div className="text-white text-sm font-medium">
+              Live Feed
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
