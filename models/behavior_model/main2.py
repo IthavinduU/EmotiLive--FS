@@ -10,7 +10,7 @@ from eye_movement import process_eye_movement
 from head_pose import process_head_pose
 
 # 🔹 MongoDB Setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb+srv://thavindul:COoDqXkgACy5PLOr@emotilivecluster.zxugaax.mongodb.net/?retryWrites=true&w=majority&appName=Emotilivecluster")
 db = client["emotilive"]  # Database name
 collection = db["behaviourlogs"]  # Collection name
 
