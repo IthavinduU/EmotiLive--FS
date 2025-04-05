@@ -66,9 +66,6 @@ export default function Home() {
           <Link href="/archive">
             <button className="px-4 py-2">Archive</button>
           </Link>
-          <Link href="/profile">
-            <button className="px-4 py-2">Profile</button>
-          </Link>
         </div>
       </div>
 
@@ -81,16 +78,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Log Section */}
-        <div className="md:col-span-1">
-          <div className="border rounded p-4 h-[300px]">
-            <h3 className="font-medium mb-4">Log</h3>
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">26/03 4:32PM - Student 1 happy</p>
-              <p className="text-sm text-gray-500">26/03 4:32PM - Student 2 sad</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Emotion and Attention Section */}
@@ -100,14 +87,6 @@ export default function Home() {
 
         {/* Behavioral Card */}
         <BehavioralCard title="Average Attention" behavior="Good" />
-
-        {/* Attention Direction Section */}
-        <div className="border rounded p-4 flex items-center justify-between">
-          <span>Set attention direction</span>
-          <button className="border rounded p-1">
-            <span>←</span>
-          </button>
-        </div>
       </div>
 
       {/* Emotion Demographics (Graph with Percentages) */}

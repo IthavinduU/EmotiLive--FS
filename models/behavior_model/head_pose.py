@@ -105,7 +105,7 @@ def process_head_pose(frame, calibrated_angles=None):
 
         # Use calibrated angles for head pose detection
         pitch_offset, yaw_offset, roll_offset = calibrated_angles
-        PITCH_THRESHOLD = 8  # Reduced sensitivity
+        PITCH_THRESHOLD = 10 
         YAW_THRESHOLD = 12
         ROLL_THRESHOLD = 5
 
