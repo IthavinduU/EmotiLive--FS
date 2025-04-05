@@ -5,6 +5,7 @@ import EmotionCard from "@/components/EmotionCard";
 import BehavioralCard from "@/components/BehavioralCard";
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from "recharts";
+import VideoFeed from "@/components/video-feed";
 
 interface EmotionLog {
   timestamp: string;
@@ -73,11 +74,10 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Video Feed Section */}
         <div className="md:col-span-2">
-          <div className="border rounded p-4 h-[300px] flex items-center justify-center">
-            <p className="text-gray-500">Video Feed</p>
+          <div className="border rounded p-4 h-[500px]">
+            <VideoFeed />
           </div>
         </div>
-
       </div>
 
       {/* Emotion and Attention Section */}
