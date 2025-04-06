@@ -17,6 +17,7 @@ export default function Home() {
   const [emotionLogs, setEmotionLogs] = useState<EmotionLog[]>([]);
   const [emotionStats, setEmotionStats] = useState<Record<string, number>>({});
   const [averageEmotion, setAverageEmotion] = useState<string>("No Data");
+  const [behavior, setBehavior] = useState<string>("Not Started Yet"); // Add this line
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -115,6 +116,10 @@ export default function Home() {
     );
   }
 
+  const updateAverageEmotion = (newAverageEmotion: string) => {
+    setAverageEmotion(newAverageEmotion);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header Section */}
@@ -146,17 +151,20 @@ export default function Home() {
           {/* Video Feed Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md overflow-hidden h-[500px]">
-              <VideoFeed />
+              <VideoFeed 
+                onUpdateAverageEmotion={setAverageEmotion} 
+                onUpdateBehavior={setBehavior} 
+              />
             </div>
           </div>
 
           {/* Stats Cards */}
           <div className="space-y-8">
             <div className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-              <EmotionCard title="Average Emotion" emotion={averageEmotion} />
+              <EmotionCard title="Average Emotion" value={averageEmotion} />
             </div>
             <div className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-              <BehavioralCard title="Average Attention" behavior="Good" />
+              <BehavioralCard title="Average Attention" behavior={behavior} />
             </div>
           </div>
         </div>

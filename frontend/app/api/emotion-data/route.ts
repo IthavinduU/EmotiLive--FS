@@ -10,7 +10,7 @@ const client = new MongoClient(MONGO_URI);
 
 // Function to connect to MongoDB
 async function connectToDB() {
-  if (!client.topology || !client.topology.isConnected()) {
+  if (!client.connect()) {
     await client.connect();
   }
   return client.db(DB_NAME).collection(COLLECTION_NAME);
@@ -45,10 +45,21 @@ export async function POST(req: Request) {
 }
 
 // ✅ GET: Retrieve emotion logs from MongoDB
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const limitParam = searchParams.get('limit');
+    const limit = limitParam ? parseInt(limitParam) : 0; // 0 means no limit
+    
     const collection = await connectToDB();
-    const logs = await collection.find().sort({ timestamp: -1 }).toArray();
+    let query = collection.find().sort({ timestamp: -1 });
+    
+    // Apply limit if provided
+    if (limit > 0) {
+      query = query.limit(limit);
+    }
+    
+    const logs = await query.toArray();
 
     return NextResponse.json({ logs }, { status: 200 });
   } catch (error) {

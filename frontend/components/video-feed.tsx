@@ -2,18 +2,171 @@
 
 import { useEffect, useRef, useState } from "react"
 
-export default function VideoFeed() {
+interface VideoFeedProps {
+  onUpdateAverageEmotion: (averageEmotion: string) => void;
+  onUpdateBehavior?: (behavior: string) => void; // Add new prop for behavior updates
+}
+
+export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: VideoFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handlePlayPause = () => {
+  useEffect(() => {
+    if (!hasInteracted) {
+      onUpdateAverageEmotion("Not Started Yet");
+      // Also update behavior card with "Not Started Yet"
+      if (onUpdateBehavior) {
+        onUpdateBehavior("Not Started Yet");
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [hasInteracted, onUpdateAverageEmotion, onUpdateBehavior]);
+
+  const fetchLatestEmotionData = async () => {
+    try {
+      console.log("Fetching emotion data...");
+      const response = await fetch("/api/emotion-data?limit=10");
+      const data = await response.json();
+      
+      if (data.logs && Array.isArray(data.logs)) {
+        const emotionCounts: Record<string, number> = {};
+        data.logs.forEach((log: any) => {
+          if (log && log.emotion) {
+            emotionCounts[log.emotion] = (emotionCounts[log.emotion] || 0) + 1;
+          }
+        });
+
+        if (Object.keys(emotionCounts).length > 0) {
+          const mostFrequentEmotion = Object.entries(emotionCounts).reduce(
+            (prev, curr) => (curr[1] > prev[1] ? curr : prev),
+            ["No Data", 0]
+          )[0];
+          
+          console.log("AVERAGE EMOTION:", mostFrequentEmotion);
+          onUpdateAverageEmotion(mostFrequentEmotion);
+        } else {
+          onUpdateAverageEmotion("No Data Available");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching emotion data:", error);
+      onUpdateAverageEmotion("Error Fetching Data");
+    }
+  };
+
+  // New function to fetch behavior data
+  const fetchLatestBehaviorData = async () => {
+    try {
+      console.log("Fetching behavior data...");
+      const response = await fetch("/api/behavior-data?limit=10");
+      const data = await response.json();
+      
+      if (data.logs && Array.isArray(data.logs)) {
+        const behaviorCounts: Record<string, number> = {};
+        data.logs.forEach((log: any) => {
+          if (log && log.headPose) {
+            behaviorCounts[log.headPose] = (behaviorCounts[log.headPose] || 0) + 1;
+          }
+        });
+
+        if (Object.keys(behaviorCounts).length > 0) {
+          const mostFrequentBehavior = Object.entries(behaviorCounts).reduce(
+            (prev, curr) => (curr[1] > prev[1] ? curr : prev),
+            ["No Data", 0]
+          )[0];
+          
+          console.log("AVERAGE HEAD POSE:", mostFrequentBehavior);
+          if (onUpdateBehavior) {
+            onUpdateBehavior(mostFrequentBehavior);
+          }
+        } else {
+          if (onUpdateBehavior) {
+            onUpdateBehavior("No Data Available");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching behavior data:", error);
+      if (onUpdateBehavior) {
+        onUpdateBehavior("Error Fetching Data");
+      }
+    }
+  };
+
+  const handlePlayPause = async () => {
+    setHasInteracted(true);
+
     if (videoRef.current) {
       if (isPlaying) {
-        videoRef.current.pause()
+        // STOPPING VIDEO
+        videoRef.current.pause();
+        onUpdateAverageEmotion("Not Started Yet");
+        if (onUpdateBehavior) {
+          onUpdateBehavior("Not Started Yet");
+        }
+
+        // Clear all intervals
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        
+        if ((window as any).behaviorIntervalRef) {
+          clearInterval((window as any).behaviorIntervalRef);
+          (window as any).behaviorIntervalRef = null;
+        }
+        
+        setIsPlaying(false);
       } else {
-        videoRef.current.play()
+        // STARTING VIDEO
+        videoRef.current.play();
+        onUpdateAverageEmotion("Loading...");
+        if (onUpdateBehavior) {
+          onUpdateBehavior("Loading...");
+        }
+        
+        // Run models
+        try {
+          const emotionResponse = await fetch("/api/runEmotionModel", { method: "GET" });
+          const emotionData = await emotionResponse.json();
+          console.log("Emotion model response:", emotionData.message || "Emotion model triggered");
+        } catch (error) {
+          console.error("Error triggering emotion model:", error);
+        }
+    
+        try {
+          const behaviorResponse = await fetch("/api/runBehaviorModel", { method: "GET" });
+          const behaviorData = await behaviorResponse.json();
+          console.log("Behavior model response:", behaviorData.message || "Behavior model triggered");
+        } catch (error) {
+          console.error("Error triggering behavior model:", error);
+        }
+
+        // Fetch data immediately
+        await fetchLatestEmotionData();
+        await fetchLatestBehaviorData();
+
+        // Clear any existing intervals first
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+        if ((window as any).behaviorIntervalRef) {
+          clearInterval((window as any).behaviorIntervalRef);
+        }
+        
+        // Set up new intervals - both using the same pattern
+        intervalRef.current = setInterval(fetchLatestEmotionData, 5000);
+        (window as any).behaviorIntervalRef = setInterval(fetchLatestBehaviorData, 5000);
+        
+        setIsPlaying(true);
       }
-      setIsPlaying(!isPlaying)
     }
   }
 
@@ -61,4 +214,3 @@ export default function VideoFeed() {
     </div>
   )
 }
-

@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 
 export async function GET() {
-    const scriptPath = "D:\\University\\IIT\\Level 7\\Final Year Project\\MVP\\EmotiLive\\Fullstack\\models\\behavior_model\\main2.py";
+    const scriptPath = "..\\models\\behavior_model\\main2.py";
 
     return new Promise((resolve) => {
         exec(`python "${scriptPath}"`, (error, stdout, stderr) => {
