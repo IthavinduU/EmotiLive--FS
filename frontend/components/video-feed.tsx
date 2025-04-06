@@ -101,8 +101,9 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
       if (data.logs && Array.isArray(data.logs)) {
         const behaviorCounts: Record<string, number> = {};
         data.logs.forEach((log: any) => {
-          if (log && log.headPose) {
-            behaviorCounts[log.headPose] = (behaviorCounts[log.headPose] || 0) + 1;
+          // Look for gaze field instead of headPose
+          if (log && log.gaze) {
+            behaviorCounts[log.gaze] = (behaviorCounts[log.gaze] || 0) + 1;
           }
         });
 
@@ -112,7 +113,7 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
             ["No Data", 0]
           )[0];
           
-          console.log("AVERAGE HEAD POSE:", mostFrequentBehavior);
+          console.log("AVERAGE GAZE:", mostFrequentBehavior);
           if (onUpdateBehavior) {
             onUpdateBehavior(mostFrequentBehavior);
           }

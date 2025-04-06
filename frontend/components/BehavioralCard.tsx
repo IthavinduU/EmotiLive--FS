@@ -17,7 +17,9 @@ const BehavioralCard: React.FC<BehavioralCardProps> = ({ title, behavior }) => {
     }
     
     // Check if head pose is looking forward
-    if (behavior.toLowerCase().includes("forward") || behavior.toLowerCase().includes("center")) {
+    if (behavior.toLowerCase().includes("looking forward") || 
+        behavior.toLowerCase().includes("looking center") || 
+        behavior.toLowerCase().includes("center")) {
       return "Good";
     } else {
       return "Needs Improvement";
