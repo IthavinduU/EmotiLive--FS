@@ -1,0 +1,18 @@
+# EmotiLive: Real-Time Student Engagement Monitoring System
+
+EmotiLive is an advanced AI-based system designed to monitor and analyze student engagement and emotional behavior in real time during classroom sessions. It combines computer vision, deep learning, and video enhancement technologies to support educators with live feedback on student attentiveness and emotions.
+
+## 🚀 Features
+
+- 🎥 **Real-Time Emotion Recognition** using a CNN model trained on FER2013.
+- 👁️ **Behavioral Analysis** through head pose and gaze tracking models.
+- 🔧 **Video Super-Resolution** using ESRGAN to enhance low-quality classroom footage.
+- 📊 **Live Engagement Metrics** displayed for monitoring trends in emotional state and attention.
+- 🧠 **Multi-model Integration** for accurate and efficient emotion and behavior interpretation.
+- 💾 **MongoDB Storage** for emotion logs and engagement tracking.
+- 🌐 **Next.js Frontend** for interactive UI and visualization.
+- ⚡ **FastAPI Backend** to integrate AI models with frontend seamlessly.
+
+---
+
+
