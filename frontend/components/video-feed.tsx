@@ -130,10 +130,9 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
     }
   };
 
-  // Function to run models in background
-  const runModelsInBackground = () => {
+  // Function to run emotion model in background
+  const runEmotionModelInBackground = () => {
     return new Promise<void>((resolve) => {
-      // Use setTimeout to move the model execution to a separate thread
       setTimeout(async () => {
         try {
           console.log("Running emotion model in background...");
@@ -143,7 +142,15 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
         } catch (error) {
           console.error("Error triggering emotion model:", error);
         }
-    
+        resolve();
+      }, 0);
+    });
+  };
+
+  // Function to run behavior model in background
+  const runBehaviorModelInBackground = () => {
+    return new Promise<void>((resolve) => {
+      setTimeout(async () => {
         try {
           console.log("Running behavior model in background...");
           const behaviorResponse = await fetch("/api/runBehaviorModel", { method: "GET" });
@@ -152,7 +159,6 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
         } catch (error) {
           console.error("Error triggering behavior model:", error);
         }
-        
         resolve();
       }, 0);
     });
@@ -190,8 +196,9 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
           onUpdateBehavior("Loading...");
         }
         
-        // Run models in background thread
-        runModelsInBackground();
+        // Run each model in its own separate thread
+        runEmotionModelInBackground();
+        runBehaviorModelInBackground();
 
         // Fetch data immediately - this can run in parallel with the models
         fetchLatestEmotionData();
