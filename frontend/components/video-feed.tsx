@@ -65,7 +65,7 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
   const fetchLatestBehaviorData = async () => {
     try {
       console.log("Fetching behavior data...");
-      const response = await fetch("/api/behavior-data?limit=10");
+      const response = await fetch("/api/behaviour-data?limit=10");
       const data = await response.json();
       
       if (data.logs && Array.isArray(data.logs)) {

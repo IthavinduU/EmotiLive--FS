@@ -12,6 +12,10 @@ const BehavioralCard: React.FC<BehavioralCardProps> = ({ title, behavior }) => {
       return behavior;
     }
     
+    if (behavior === "No Data Available" || behavior === "Error Fetching Data") {
+      return behavior;
+    }
+    
     // Check if head pose is looking forward
     if (behavior.toLowerCase().includes("forward") || behavior.toLowerCase().includes("center")) {
       return "Good";
@@ -25,6 +29,8 @@ const BehavioralCard: React.FC<BehavioralCardProps> = ({ title, behavior }) => {
     const status = getAttentionStatus();
     if (status === "Good") return "text-green-600";
     if (status === "Needs Improvement") return "text-amber-500";
+    if (status === "Error Fetching Data") return "text-red-500";
+    if (status === "No Data Available") return "text-blue-500";
     return "text-gray-600";
   };
 
