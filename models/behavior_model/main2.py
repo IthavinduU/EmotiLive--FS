@@ -18,7 +18,7 @@ collection = db["behaviourlogs"]  # Collection name
 NEXTJS_API_URL = "http://localhost:3000/api/behavior-data"
 
 # 🔹 Video source
-video_file_path = r"D:\University\IIT\Level 7\Final Year Project\MVP\EmotiLive\Behavioral Analyzis Model\gaze tracking\ds3_1.mp4"
+video_file_path = r"D:\University\IIT\Level 7\Final Year Project\MVP\EmotiLive\Fullstack\frontend\public\videos\sample.mp4"
 cap = cv2.VideoCapture(video_file_path)
 
 # 🔹 Face tracking setup

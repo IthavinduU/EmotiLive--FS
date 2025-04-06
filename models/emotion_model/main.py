@@ -30,7 +30,7 @@ class_names = [
 ]  # Emotion classes
 
 # Video source
-video_file_path = r"D:\University\IIT\Level 7\Final Year Project\MVP\EmotiLive\Emotion Recognition Model\ds3_1.mp4"
+video_file_path = r"D:\University\IIT\Level 7\Final Year Project\MVP\EmotiLive\Fullstack\frontend\public\videos\sample.mp4"
 cap = cv2.VideoCapture(video_file_path)  # Open video file for processing
 
 # Dictionary to track student emotions
