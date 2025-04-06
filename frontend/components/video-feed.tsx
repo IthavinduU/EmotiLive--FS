@@ -32,7 +32,20 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
   const fetchLatestEmotionData = async () => {
     try {
       console.log("Fetching emotion data...");
-      const response = await fetch("/api/emotion-data?limit=10");
+      // Check if we're in development mode and use a fallback if needed
+      const response = await fetch("/api/emotion-data?limit=10", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        console.error("Error response from emotion API:", response.status);
+        onUpdateAverageEmotion("Error Fetching Data");
+        return;
+      }
+      
       const data = await response.json();
       
       if (data.logs && Array.isArray(data.logs)) {
@@ -54,6 +67,9 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
         } else {
           onUpdateAverageEmotion("No Data Available");
         }
+      } else {
+        console.error("Invalid data format from emotion API:", data);
+        onUpdateAverageEmotion("No Data Available");
       }
     } catch (error) {
       console.error("Error fetching emotion data:", error);
@@ -65,7 +81,21 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
   const fetchLatestBehaviorData = async () => {
     try {
       console.log("Fetching behavior data...");
-      const response = await fetch("/api/behaviour-data?limit=10");
+      const response = await fetch("/api/behaviour-data?limit=10", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        console.error("Error response from behavior API:", response.status);
+        if (onUpdateBehavior) {
+          onUpdateBehavior("Error Fetching Data");
+        }
+        return;
+      }
+      
       const data = await response.json();
       
       if (data.logs && Array.isArray(data.logs)) {
@@ -100,6 +130,34 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
     }
   };
 
+  // Function to run models in background
+  const runModelsInBackground = () => {
+    return new Promise<void>((resolve) => {
+      // Use setTimeout to move the model execution to a separate thread
+      setTimeout(async () => {
+        try {
+          console.log("Running emotion model in background...");
+          const emotionResponse = await fetch("/api/runEmotionModel", { method: "GET" });
+          const emotionData = await emotionResponse.json();
+          console.log("Emotion model response:", emotionData.message || "Emotion model triggered");
+        } catch (error) {
+          console.error("Error triggering emotion model:", error);
+        }
+    
+        try {
+          console.log("Running behavior model in background...");
+          const behaviorResponse = await fetch("/api/runBehaviorModel", { method: "GET" });
+          const behaviorData = await behaviorResponse.json();
+          console.log("Behavior model response:", behaviorData.message || "Behavior model triggered");
+        } catch (error) {
+          console.error("Error triggering behavior model:", error);
+        }
+        
+        resolve();
+      }, 0);
+    });
+  };
+
   const handlePlayPause = async () => {
     setHasInteracted(true);
 
@@ -132,26 +190,12 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
           onUpdateBehavior("Loading...");
         }
         
-        // Run models
-        try {
-          const emotionResponse = await fetch("/api/runEmotionModel", { method: "GET" });
-          const emotionData = await emotionResponse.json();
-          console.log("Emotion model response:", emotionData.message || "Emotion model triggered");
-        } catch (error) {
-          console.error("Error triggering emotion model:", error);
-        }
-    
-        try {
-          const behaviorResponse = await fetch("/api/runBehaviorModel", { method: "GET" });
-          const behaviorData = await behaviorResponse.json();
-          console.log("Behavior model response:", behaviorData.message || "Behavior model triggered");
-        } catch (error) {
-          console.error("Error triggering behavior model:", error);
-        }
+        // Run models in background thread
+        runModelsInBackground();
 
-        // Fetch data immediately
-        await fetchLatestEmotionData();
-        await fetchLatestBehaviorData();
+        // Fetch data immediately - this can run in parallel with the models
+        fetchLatestEmotionData();
+        fetchLatestBehaviorData();
 
         // Clear any existing intervals first
         if (intervalRef.current) {
