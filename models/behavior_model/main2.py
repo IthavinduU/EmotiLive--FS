@@ -9,33 +9,33 @@ from scipy.spatial import distance
 from eye_movement import process_eye_movement
 from head_pose import process_head_pose
 
-# 🔹 MongoDB Setup
+# MongoDB Setup
 client = pymongo.MongoClient("mongodb+srv://thavindul:COoDqXkgACy5PLOr@emotilivecluster.zxugaax.mongodb.net/?retryWrites=true&w=majority&appName=Emotilivecluster")
 db = client["emotilive"]  # Database name
 collection = db["behaviourlogs"]  # Collection name
 
-# 🔹 Next.js API endpoint for behavior data
+# Next.js API endpoint for behavior data
 NEXTJS_API_URL = "http://localhost:3000/api/behavior-data"
 
-# 🔹 Video source
+# Video source
 video_file_path = r"D:\University\IIT\Level 7\Final Year Project\MVP\EmotiLive\Fullstack\frontend\public\videos\sample.mp4"
 cap = cv2.VideoCapture(video_file_path)
 
-# 🔹 Face tracking setup
+# Face tracking setup
 known_face_encodings = []
 known_face_ids = []
 next_face_id = 1
 
-# 🔹 Behavior tracking dictionary
+# Behavior tracking dictionary
 student_behavior_data = {}
 
-# 🔹 Time intervals
+# Time intervals
 update_interval = 5  # seconds
 log_interval = 30  # Log every 30 seconds
 last_log_time = time.time()
 
 
-# ✅ Function to send behavior data to Next.js API
+# Function to send behavior data to Next.js API
 def send_behavior_data(student_behavior_data):
     for face_id, (last_seen, gaze, head_pose, count) in student_behavior_data.items():
         student_data = {
@@ -52,7 +52,7 @@ def send_behavior_data(student_behavior_data):
             print(f"Failed to send: {response.status_code}, {response.text}")
 
 
-# ✅ Function to log behavior data in MongoDB
+# Function to log behavior data in MongoDB
 def log_behavior():
     timestamp = datetime.datetime.now()
     
@@ -71,10 +71,10 @@ def log_behavior():
     send_behavior_data(student_behavior_data)
 
 
-# 🔹 Load Haar Cascade for face detection
+# Load Haar Cascade for face detection
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
-# ✅ Process video frames
+# Process video frames
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -108,13 +108,13 @@ while True:
                 known_face_encodings.append(face_encoding)
                 known_face_ids.append(face_id)
 
-            # 🔹 Process eye movement
+            # Process eye movement
             _, gaze_direction = process_eye_movement(face_roi)
 
-            # 🔹 Process head pose
+            # Process head pose
             _, head_direction = process_head_pose(face_roi, None)
 
-            # 🔹 Update behavior tracking data
+            # Update behavior tracking data
             if (
                 face_id not in student_behavior_data
                 or current_time - student_behavior_data[face_id][0] > update_interval
@@ -123,7 +123,7 @@ while True:
             else:
                 student_behavior_data[face_id] = (current_time, gaze_direction, head_direction, student_behavior_data[face_id][3] + 1)
 
-            # 🔹 Display behavior data
+            # Display behavior data
             cv2.putText(frame, f"Student {face_id}: Gaze {gaze_direction}", (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             cv2.putText(frame, f"Head: {head_direction}", (x, y - 30),

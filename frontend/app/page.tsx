@@ -17,7 +17,7 @@ export default function Home() {
   const [emotionLogs, setEmotionLogs] = useState<EmotionLog[]>([]);
   const [emotionStats, setEmotionStats] = useState<Record<string, number>>({});
   const [averageEmotion, setAverageEmotion] = useState<string>("No Data");
-  const [behavior, setBehavior] = useState<string>("Not Started Yet"); // Add this line
+  const [behavior, setBehavior] = useState<string>("Not Started Yet"); 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +25,6 @@ export default function Home() {
     fetch("/api/emotion-data")
       .then((res) => res.json())
       .then((data) => {
-        // Make sure data.logs exists and is an array
         const logs = Array.isArray(data?.logs) ? data.logs : [];
         setEmotionLogs(logs);
 
@@ -69,7 +68,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        {/* Header Section - Keep this visible during loading */}
+        {/* Header Section */}
         <header className="bg-white shadow-sm sticky top-0 z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -85,6 +84,11 @@ export default function Home() {
                 <Link href="/archive">
                   <button className="text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                     Archive
+                  </button>
+                </Link>
+                <Link href="/archive">
+                  <button className="text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    Documentation
                   </button>
                 </Link>
               </nav>
@@ -138,6 +142,11 @@ export default function Home() {
               <Link href="/archive">
                 <button className="text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                   Archive
+                </button>
+              </Link>
+              <Link href="/documentation">
+                <button className="text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  Documentation
                 </button>
               </Link>
             </nav>
