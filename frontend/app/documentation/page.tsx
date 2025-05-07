@@ -1,10 +1,53 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const DocumentationPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 p-8">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Header Section */}
+      <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-10 border-b border-indigo-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <motion.h1 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              EmotiLive
+            </motion.h1>
+            <nav className="flex space-x-3">
+              <Link href="/">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="text-gray-700 px-5 py-2 rounded-lg hover:bg-indigo-50 transition-all duration-200 font-medium">
+                  Home
+                </motion.button>
+              </Link>
+              <Link href="/archive">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="text-gray-700 px-5 py-2 rounded-lg hover:bg-indigo-50 transition-all duration-200 font-medium">
+                  Archive
+                </motion.button>
+              </Link>
+              <Link href="/documentation">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium">
+                  Documentation
+                </motion.button>
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8">
         <h1 className="text-4xl font-extrabold text-blue-700 mb-6 border-b pb-2">📘 EmotiLive Documentation</h1>
 
@@ -41,8 +84,9 @@ const DocumentationPage = () => {
             </div>
           </div>
         </section>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -224,7 +224,7 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
 
   return (
     <div className="relative w-full h-full flex flex-col">
-      <div className="relative flex-1 overflow-hidden rounded-lg">
+      <div className="relative flex-1 overflow-hidden rounded-xl shadow-lg">
         <video 
           ref={videoRef}
           className="w-full h-full object-cover"
@@ -234,11 +234,11 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
           Your browser does not support the video tag.
         </video>
         
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-indigo-900/70 via-indigo-800/40 to-transparent">
           <div className="flex items-center justify-between">
             <button 
               onClick={handlePlayPause}
-              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md"
+              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-400 to-cyan-500 text-white rounded-lg hover:from-teal-500 hover:to-cyan-600 transition-all shadow-md"
             >
               {isPlaying ? (
                 <>
@@ -257,7 +257,7 @@ export default function VideoFeed({ onUpdateAverageEmotion, onUpdateBehavior }: 
               )}
             </button>
             
-            <div className="text-white text-sm font-medium">
+            <div className="text-white text-sm font-medium bg-indigo-600/60 px-3 py-1 rounded-full backdrop-blur-sm">
               Live Feed
             </div>
           </div>
