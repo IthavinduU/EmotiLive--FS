@@ -20,6 +20,7 @@ export default function Home() {
   const [averageEmotion, setAverageEmotion] = useState<string>("No Data");
   const [behavior, setBehavior] = useState<string>("Not Started Yet"); 
   const [isLoading, setIsLoading] = useState(true);
+  const [esrganEnabled, setEsrganEnabled] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -200,11 +201,62 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="lg:col-span-2">
-            <div className="bg-white/95 rounded-2xl shadow-lg overflow-hidden h-[500px] border border-indigo-100 hover:shadow-xl transition-all duration-300">
-              <VideoFeed 
-                onUpdateAverageEmotion={setAverageEmotion} 
-                onUpdateBehavior={setBehavior} 
-              />
+            <div className="bg-white/95 rounded-2xl shadow-lg overflow-hidden h-[500px] border border-indigo-100 hover:shadow-xl transition-all duration-300 relative">
+              <div className="relative w-full h-full">
+                <VideoFeed 
+                  onUpdateAverageEmotion={setAverageEmotion} 
+                  onUpdateBehavior={setBehavior} 
+                />
+                
+                {/* ESRGAN Enhancement Visual Effect */}
+                {esrganEnabled && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 pointer-events-none z-5 mix-blend-overlay"
+                    style={{
+                      background: "linear-gradient(to right, rgba(0,255,170,0.05), rgba(0,210,255,0.05))",
+                      boxShadow: "inset 0 0 30px rgba(0,255,200,0.2)"
+                    }}
+                  />
+                )}
+              </div>
+              
+              {/* ESRGAN Toggle Button */}
+              <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur-sm p-2 rounded-lg shadow-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-white text-sm font-medium">ESRGAN</span>
+                  <button 
+                    onClick={() => setEsrganEnabled(!esrganEnabled)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${esrganEnabled ? 'bg-green-500' : 'bg-gray-400'}`}
+                    role="switch"
+                    aria-checked={esrganEnabled}
+                  >
+                    <span 
+                      className={`${esrganEnabled ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </button>
+                  {esrganEnabled && (
+                    <span className="animate-pulse text-xs text-green-400 font-medium">Active</span>
+                  )}
+                </div>
+              </div>
+              
+              {/* ESRGAN Enhancement Indicator */}
+              {esrganEnabled && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute bottom-16 left-4 z-10 bg-gradient-to-r from-green-500/80 to-teal-500/80 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-white text-xs font-medium">Enhanced Video Quality</span>
+                </motion.div>
+              )}
             </div>
           </motion.div>
 
@@ -265,7 +317,7 @@ export default function Home() {
         </motion.div>
 
         {/* Feature Highlights */}
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
